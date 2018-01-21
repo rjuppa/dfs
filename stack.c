@@ -3,6 +3,7 @@
 //
 
 #include "stack.h"
+#include "parse_date.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -195,8 +196,8 @@ struct tm *stack_get_labels(STACK *path){
     while(item != NULL){
         if( item->data !=NULL ){
             memset(&tm1, 0, sizeof(struct tm));
-            strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S", &tm1);
-            if(strptime(item->data, "%Y-%m-%d", &tm1) == NULL){
+            strparsetime("2000-01-01", &tm1);
+            if(strparsetime(item->data, &tm1) != 0){
                 fprintf(stderr, "\nstrptime failed.\n");
             }
             labels[i++] = tm1;

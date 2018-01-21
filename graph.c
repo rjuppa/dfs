@@ -2,6 +2,7 @@
 // Created by Radek Juppa on 31/12/2017.
 //
 
+#include "parse_date.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -266,7 +267,7 @@ int days_from_2000(struct tm tm1){
     double diff_t;
 
     memset(&tm_start, 0, sizeof(struct tm));
-    strptime("2000-01-01 00:00:00", "%Y-%m-%d %H:%M:%S", &tm_start);
+    strparsetime("2000-01-01", &tm_start);
 
     t1 = mktime(&tm_start);
     t2 = mktime(&tm1);
