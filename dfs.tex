@@ -97,7 +97,6 @@ výčet všech cest mezi požadovanými uzly grafu.
 \begin{verbatim*}
 Program se bude spouštět příkazem dfs.exe <soubor-grafu> <id1> <id2> <maxD>
 \end{verbatim*}
-\selectlanguage{czech}%
 \begin{itemize}
 \item Symbol <soubor-grafu> zastupuje parametr – název vstupního souboru
 se strukturou grafu. 
@@ -156,7 +155,7 @@ dní mezi nejstarším a nejnovějším datem, následně budou podle tohoto
 \section*{2.a) Analýza grafu}
 
 Nejprve se pojďme podívat, co to je za graf. Na první pohled je vidět,
-že je to velký graf s několika tisíci uzlů. Vizualizace celého grafu
+že je to velký graf s několika tisíci uzly. Vizualizace celého grafu
 by byla dost obtížná. Proto si vyberu jen nějaký podgraf. Použil jsem
 k tomu \emph{Python} a knihovnu \emph{networkx}. Vybral jsem si prvních
 16 různých vrcholů a vzal jsem v úvahu jen 8 sousedů každého vrcholu. Vizualizaci
@@ -167,10 +166,12 @@ tohoto podgrafu jsem provedl pomocí knihovny \emph{graphviz}.
 
 \end{figure}
 
-\noindent Na obrázku vidíme, že se jedná o orientovaný graf s kružnicemi. Délka
-cesty je počet hran. Cesta nesmí obsahovat jeden vrchol vícekrát. Například
-cesta 1-2-6 má délku 2. Cesta 1-6 má délku 1. A sled 1-2-8-4-2-6 není
-cestou, protože obsahuje vrchol 2 více než jednou.
+\noindent Na obrázku vidíme, že se jedná o orientovaný graf s kružnicemi. My
+ale máme s grafem zacházet jako s orientovaným. To znamená, že s každou
+hranou přidáme i hranu opačnou. Délka cesty je počet hran. Cesta nesmí
+obsahovat jeden vrchol vícekrát. Například cesta 1-2-6 má délku 2. Cesta
+1-6 má délku 1. A sled 1-2-8-4-2-6 není cestou, protože obsahuje vrchol
+2 více než jednou.
 
 \pagebreak{}
 
@@ -201,36 +202,37 @@ mezi vrcholy 1 a 5 s maximální délkou cesty 2. viz obrázek 3
 
 \begin{figure}[H]
 
-\includegraphics[scale=0.15]{graphviz2}\caption{všechny cesty z 1 do 5 (maxD=2)}
+\includegraphics[scale=0.15]{graph42}\caption{všechny cesty z 1 do 5 (maxD=2)}
 
 \end{figure}
 
-Zde je tabulka všech cest o maximální délce 2 z vrcholu 1:
+\noindent Zde je tabulka všech cest o maximální délce 2 z vrcholu
+1:
 
 \begin{table}[H]
 
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline 
-1-2-4 NE  & 1-3-5 \textbf{\textcolor{green}{\noun{ANO}}}  & 1-6-2 NE  & 1-7-5 \textbf{\textcolor{green}{ANO}} \tabularnewline
+1-2-4 NE  & 1-3-5 \textbf{\textcolor{green}{\noun{ANO}}}  & 1-4-8 NE & 1-7-5 \textbf{\textcolor{green}{ANO}} & 1-6 NE\tabularnewline
 \hline 
-1-2-5 \textbf{\textcolor{green}{ANO}}  & 1-4-2 NE  & 1-6-4 NE  & 1-7-8 NE \tabularnewline
+1-2-5 \textbf{\textcolor{green}{ANO}}  & 1-4-2 NE  & 1-6-2 NE  & 1-7-8 NE & 1-7 NE\tabularnewline
 \hline 
-1-2-6 NE  & 1-4-6 NE  & 1-7-2 NE  & \tabularnewline
+1-2-6 NE  & 1-4-3 NE  & 1-6-4 NE  & 1-2 NE & \tabularnewline
 \hline 
-1-2-8 NE  & 1-4-7 NE  & 1-7-3 NE  & \tabularnewline
+1-2-8 NE  & 1-4-6 NE  & 1-6-5 \textbf{\textcolor{green}{ANO}} & 1-3 NE & \tabularnewline
 \hline 
-1-3-4 NE  & 1-4-8 NE  & 1-7-4 NE  & \tabularnewline
+1-3-4 NE  & 1-4-7 NE  & 1-7-4 NE & 1-4 NE & \tabularnewline
 \hline 
 \end{tabular}\caption{cesty z vrcholu 1 do vrcholu 5 (maxD = 2)}
 
 \end{table}
 
-Je vidět, že jen 3 cesty vedou do vrcholu 5. Budu tedy používat techniku
+Je vidět, že jen 4 cesty vedou do vrcholu 5. Budu tedy používat techniku
 \emph{DFS}. Vrcholy, jimiž jsem prošel, si budu ukládat do zásobníku. Tak
-budu postupovat dokud budu mít kam vstupovat nebo dokud nevstoupím
+budu postupovat, dokud budu mít kam vstupovat nebo dokud nevstoupím
 do cílového vrcholu nebo nedosáhnu maximální délky cesty. V opačném
-případě se vrátím do vrcholu ze kteréhé jsem přišel. Pokud vstoupím
-do cílového vrcholu cestu si uložím jako jedno z řešení. Na konci
+případě se vrátím do vrcholu, ze kterého jsem přišel. Pokud vstoupím
+do cílového vrcholu, cestu si uložím jako jedno z řešení. Na konci
 pak všechny nalezené cesty seřadím a vytisknu.
 
 \chapter*{3. Popis implementace }
@@ -238,7 +240,9 @@ pak všechny nalezené cesty seřadím a vytisknu.
 Aby bylo možno graf procházet, je třeba ho nejprve uložit do nějaké
 vhodné struktury. Samotný graf tvoří množina vrcholů a hran. Vrchol
 je tvořen jednou integer hodnotou a hrana spojuje 2 vrcholy a je ohodnocena
-řetězcem znaků. Vrcholy i hrany uložím do spojového seznamu.
+řetězcem znaků. Vrcholy i hrany uložím do spojového seznamu. Již jsem
+zmínil, že pracujeme s grafem neorientovaným, proto každou hradu uložím
+v obou směrech.
 
 \medskip{}
 
@@ -283,7 +287,7 @@ typedef struct stack{
 
 \medskip{}
 Zásobník je implementován ve svém vlastním modulu nazvaném \emph{stack.c.} Bude
-ukládat aktuální cestu a bude k tomu používat dvě typické metody:
+ukládat aktuální cestu a budu k tomu používat dvě typické metody:
 
 \begin{lstlisting}[basicstyle={\scriptsize}]
 void stack_push(STACK *stack, int id, char *data); 
@@ -322,8 +326,8 @@ typedef struct graph{
 \end{lstlisting}
 
 \medskip{}
-Graf je implementován ve svém vlastním modulu nazvaném \emph{graph.c}
-Nejdůležitejší metodou, která prochází graf a hledá cesty je metoda: 
+Graf je implementován ve svém vlastním modulu nazvaném \emph{graph.c.} Nejdůležitejší
+metodou, která prochází graf a hledá cesty je metoda: 
 
 \begin{lstlisting}[basicstyle={\scriptsize}]
 void graph_dfs(GRAPH *g)
@@ -423,6 +427,6 @@ Windows jsem narazil na problém s kompilaci. Chyběla tam funkce \emph{strptime
 kterou jsem původně používal k parsování datumu. Tuto funkci jsem
 nahradil svojí vlastní funkcí, využívající funkci \emph{sscanf}. Potom
 už to prošlo i na Windows. Úkoly a překážky, se kterými jsem se během
-práce setkal považuji za solidní úvod do programování v jazyce C. Dokumentaci
-jsem vytvořil v programu LYX.
+práce setkal považuji za solidní úvod do programování v jazyce ANSI
+C. Dokumentaci jsem vytvořil v programu LYX.
 \end{document}
