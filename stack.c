@@ -34,15 +34,20 @@ STACK *stack_create(){
 
     void stack_print(STACK *stack)
 
-    Prints the stack
+    Helper method for printing the stack
    ____________________________________________________________________________
 */
 void stack_print(STACK *stack){
     STACK_ITEM *item;
     item = stack->top;
+    int arr[10];
+    int n = 0;
     while(item != NULL){
-        printf(" %d ", item->id);
+        arr[n++] = item->id;
         item = item->next;
+    }
+    for(int i=n-1; i>=0; i--){
+        printf(" %d ", arr[i]);
     }
     printf("\n");
 }

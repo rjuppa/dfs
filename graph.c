@@ -437,6 +437,7 @@ void graph_dfs(GRAPH *g){
     v = graph_get_vertex(g, vid);
     edge = v->first_edge;
     while( edge != NULL ){
+        //stack_print(g->current_path);
         if( g->current_path->count >= g->limit ){               // max distance reached
             break;
         }
@@ -450,8 +451,10 @@ void graph_dfs(GRAPH *g){
             stack_push(g->current_path, edge->id, edge->data);
             res = graph_create_result(g->current_path);
             graph_add_result(g, res);
+            //stack_print(g->current_path);
             stack_pop(g->current_path);
-            break;
+            edge = edge->next;
+            continue;
         }
 
         stack_push(g->current_path, edge->id, edge->data);

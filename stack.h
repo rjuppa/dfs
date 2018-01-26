@@ -27,5 +27,5 @@ void stack_dispose(STACK *stack);
 int stack_contains(STACK *stack, int id);
 int *stack_get_vertexes(STACK *path);
 struct tm *stack_get_labels(STACK *path);
-
+void stack_print(STACK *stack);
 #endif //DFS_STACK_H
