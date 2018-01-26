@@ -43,7 +43,7 @@ typedef struct graph{
 
 
 GRAPH *graph_create();
-EDGE *graph_add_edge(GRAPH *g, int vertex_id, int id, char *data);
+void graph_add_edge(GRAPH *g, int vertex_id, int id, char *data);
 VERTEX *graph_get_vertex(GRAPH *g, int vertex_id);
 void graph_dispose(GRAPH *g);
 void graph_search_for_path(GRAPH *g, int start_vertex_id, int target_vertex_id, int limit);

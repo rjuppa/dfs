@@ -92,15 +92,13 @@ VERTEX *graph_add_vertex(GRAPH *g, int id){
 
 /* ____________________________________________________________________________
 
-    EDGE *graph_get_edge(GRAPH *g, int vertex_id, int id, char *data)
+    EDGE *graph_get_edge(GRAPH *g, VERTEX *v, int id, char *data)
 
     Returns an existing Edge or NULL
    ____________________________________________________________________________
 */
-EDGE *graph_get_edge(GRAPH *g, int vertex_id, int id, char *data) {
-    VERTEX *v;
+EDGE *graph_get_edge(GRAPH *g, VERTEX *v, int id, char *data) {
     EDGE *current;
-    v = graph_get_vertex(g, vertex_id);
     if( v == NULL ) {
         return NULL;
     }
@@ -109,7 +107,7 @@ EDGE *graph_get_edge(GRAPH *g, int vertex_id, int id, char *data) {
         current = v->first_edge;
         while(current!=NULL){
             if(current->id == id && strcmp(current->data, data) == 0){
-                return current;
+                return current;     //return edge
             }
             current = current->next;
         }
@@ -118,53 +116,65 @@ EDGE *graph_get_edge(GRAPH *g, int vertex_id, int id, char *data) {
 }
 
 
-/* ____________________________________________________________________________
-
-    EDGE *graph_add_edge(GRAPH *g, int vertex_id, int id, char *data)
-
-    Adds a new Edge into GRAPH and returns its reference
-   ____________________________________________________________________________
-*/
-EDGE *graph_add_edge(GRAPH *g, int vertex_id, int id, char *data){
+EDGE *__add_edge(GRAPH *g, VERTEX *v, int edge_id, char *data){
     EDGE *e;
     EDGE *current_edge;
-    VERTEX *v;
+
+    e = (EDGE *)malloc(sizeof(EDGE));
+    if(e == NULL){
+        printf("Out of memory.");
+        exit(1);
+    }
+    e->id = edge_id;
+    e->data = (char *)malloc(1 + sizeof(char) * strlen(data));
+    strcpy(e->data, data);
+    e->next = NULL;
+    if( v->first_edge == NULL ){
+        v->first_edge = e;                      // first time
+    }
+    else{
+        current_edge = v->first_edge;
+        while(current_edge->next != NULL){      // find the last item
+            current_edge = current_edge->next;
+        }
+        current_edge->next = e;                 // add a new edge on the end
+    }
+    return e;
+}
+
+/* ____________________________________________________________________________
+
+    void graph_add_edge(GRAPH *g, int vertex_id, int id, char *data)
+
+    Adds a new undirected Edge(two directed edges) into GRAPH
+   ____________________________________________________________________________
+*/
+void graph_add_edge(GRAPH *g, int vertex_id, int id, char *data){
+    EDGE *e;
+    VERTEX *v1;
     VERTEX *v2;
 
-    v = graph_get_vertex(g, vertex_id);
-    if( v == NULL ) {
-        v = graph_add_vertex(g, vertex_id);
+    v1 = graph_get_vertex(g, vertex_id);
+    if( v1 == NULL ) {
+        v1 = graph_add_vertex(g, vertex_id);
     }
 
     v2 = graph_get_vertex(g, id);
     if( v2 == NULL ) {
-        graph_add_vertex(g, id);
+        v2 = graph_add_vertex(g, id);
     }
 
-    e = graph_get_edge(g, vertex_id, id, data);
+    // direction v1 -> v2
+    e = graph_get_edge(g, v1, id, data);
     if( e == NULL){
-        // create a new edge
-        e = (EDGE *)malloc(sizeof(EDGE));
-        if(e == NULL){
-            printf("Out of memory.");
-            exit(1);
-        }
-        e->id = id;
-        e->data = (char *)malloc(1 + sizeof(char) * strlen(data));
-        strcpy(e->data, data);
-        e->next = NULL;
-        if( v->first_edge == NULL ){
-            v->first_edge = e;                      // first time
-        }
-        else{
-            current_edge = v->first_edge;
-            while(current_edge->next != NULL){      // find the last item
-                current_edge = current_edge->next;
-            }
-            current_edge->next = e;                 // add a new edge on the end
-        }
+        __add_edge(g, v1, id, data);
     }
-    return e;
+
+    // direction v2 -> v1
+    e = graph_get_edge(g, v2, vertex_id, data);
+    if( e == NULL){
+        __add_edge(g, v2, vertex_id, data);
+    }
 }
 
 

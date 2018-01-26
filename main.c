@@ -109,6 +109,7 @@ void handle_input(int argc, char *argv[]) {
     target_id = parseInteger(argv[3]);
     if (argc > 4) {
         max_distance = parseInteger(argv[4]);
+        max_distance++;
     }
 
     /*
