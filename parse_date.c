@@ -17,7 +17,7 @@
 int strparsetime(const char *str, struct tm *tm1){
     int year = 0, month = 0, day = 0;
     sscanf( str, "%d-%d-%d ", &year, &month, &day );
-    tm1->tm_isdst = -1;
+    tm1->tm_isdst = 0;    // no daylight saving time
     tm1->tm_year = year - 1900;
     tm1->tm_mon = month - 1;
     tm1->tm_mday = day;

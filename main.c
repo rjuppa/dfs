@@ -6,7 +6,6 @@
 
 
 #define MAX_INPUT_LENGTH 256
-#define MAX_NUMBER_LENGTH 16
 #define MAX_DATA_LENGTH 36
 
 char *dir_separator()

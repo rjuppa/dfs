@@ -6,8 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "graph.h"
+
+
+#define SEC_IN_DAY  86400
+#define START_DATE  "2000-01-01"
 
 /* ____________________________________________________________________________
 
@@ -266,23 +269,23 @@ void graph_dispose(GRAPH *g){
 
 /* ____________________________________________________________________________
 
-    int days_from_2000(struct tm tm1)
+    int days_from_start_date(struct tm tm1)
 
-    Counts days from 2000-01-01
+    Counts days from START_DATE
    ____________________________________________________________________________
 */
-int days_from_2000(struct tm tm1){
+int days_from_start_date(struct tm tm1){
     struct tm tm_start;
     time_t t1, t2;
     double diff_t;
 
     memset(&tm_start, 0, sizeof(struct tm));
-    strparsetime("2000-01-01", &tm_start);
+    strparsetime(START_DATE, &tm_start);
 
     t1 = mktime(&tm_start);
     t2 = mktime(&tm1);
     diff_t = difftime(t2, t1);
-    int d = (int)(diff_t/60/60/24);
+    int d = (int)(diff_t/SEC_IN_DAY);
     return d;
 }
 
@@ -322,10 +325,10 @@ RESULT *graph_create_result(STACK *path){
     r->labels = stack_get_labels(path);
     r->length = path->count-1;
 
-    days_min = days_from_2000(r->labels[0]);
+    days_min = days_from_start_date(r->labels[0]);
     days_max = days_min;
     for(i=0; i<path->count-1; i++){
-        days = days_from_2000(r->labels[i]);
+        days = days_from_start_date(r->labels[i]);
         if( days > days_max ){ days_max = days; }
         if( days < days_min ){ days_min = days; }
     }

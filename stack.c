@@ -200,8 +200,7 @@ struct tm *stack_get_labels(STACK *path){
     int i = 0;
     while(item != NULL){
         if( item->data !=NULL ){
-            memset(&tm1, 0, sizeof(struct tm));
-            strparsetime("2000-01-01", &tm1);
+            memset(&tm1, 0, sizeof(struct tm));         // null space for tm
             if(strparsetime(item->data, &tm1) != 0){
                 fprintf(stderr, "\nstrptime failed.\n");
             }
